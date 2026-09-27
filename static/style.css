@@ -556,5 +556,181 @@ textarea{
 }
 
 
+/* ===== Dashboard Layout ===== */
+
+.dashboard-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.dashboard-title::before {
+    content: "📊";
+    font-size: 28px;
+}
 
 
+/* Quick Action Buttons */
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: nowrap;
+    margin-top: 15px;
+}
+
+.action-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    text-decoration: none;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+
+/* Dashboard Cards */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.card {
+    min-height: 110px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .action-buttons {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 600px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== Dashboard Footer ===== */
+
+footer {
+    margin-top: 45px;
+    padding: 20px 10px;
+    text-align: center;
+    line-height: 1.7;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+
+/* Single Line Footer */
+
+footer {
+    margin-top: 45px;
+    padding: 15px 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+footer p {
+    display: inline;
+    margin: 0 8px;
+}
+
+footer {
+    margin-top: 45px;
+    padding: 15px 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+footer p {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+/* Quick Action Pill Buttons */
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.action-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+    color:white;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    background: #2c3e50;
+    border: 1px solid #ddd;
+    transition: 0.2s ease;
+}
+
+.action-buttons a:hover {
+    transform: translateY(-2px);
+}
+
+.page-header h1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-header h1::before {
+    content: "📊";
+    font-size: 25px;
+}
+.page-header h1 {
+    margin-bottom: 0;
+}
+
+.page-header p {
+    margin-top: 0;
+    padding: 0;
+}
+.sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+}
+.sidebar-title {
+    margin-bottom: 0;
+}
+
+.sidebar-title + p {
+    margin-top: 0;
+    padding-top: 0;
+}
+.sidebar-title {
+    justify-content: center;
+    text-align: center;
+}
+
+.sidebar-title + p {
+    text-align: center;
+}

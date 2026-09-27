@@ -1,14 +1,17 @@
 from datetime import datetime
 import re
+import os
+from dotenv import load_dotenv
 from tkinter import messagebox
 import mysql.connector
+load_dotenv(override=True)
 import tkinter as tk
 from tkinter import ttk, messagebox
 conn = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="khushbu@060626",
-    database="paper_inventory_db"
+    host="127.0.0.1",
+    user=os.getenv("DB_USER"),
+    password=os.getenv("DB_PASSWORD"),
+    database=os.getenv("DB_NAME")
 )
 
 cursor = conn.cursor()

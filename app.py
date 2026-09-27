@@ -1,6 +1,6 @@
 import re
 from flask import flash
-from flask import Flask, render_template, request, redirect, send_file, flash
+from flask import Flask, render_template, request, redirect, send_file, flash, session
 from openpyxl import Workbook
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib import colors
@@ -9,6 +9,23 @@ print("******** APP.PY LOADED ********")
 
 app = Flask(__name__)
 app.secret_key = "paper_inventory_secret_key"
+@app.before_request
+def check_login():
+
+    public_pages = [
+        'home',
+        'register',
+        'forgot_password',
+        'reset_password'
+    ]
+
+    # CSS, images, JavaScript आदि को allow करें
+    if request.endpoint == 'static':
+        return
+
+    # Login के बिना बाकी pages को रोकें
+    if request.endpoint not in public_pages and 'username' not in session:
+        return redirect('/')
 @app.route('/', methods=['GET', 'POST'])
 def home():
 
@@ -25,9 +42,11 @@ def home():
         user = cursor.fetchone()
 
         if user:
+            session['username'] = username
             return redirect('/dashboard')
         else:
             return "Invalid Username or Password"
+        print("LOGIN PAGE REACHED")
 
     return render_template('login.html')
 
@@ -67,6 +86,10 @@ def add_product():
         return redirect('/view_products')
 
     return render_template('add_product.html',suppliers=suppliers, active_page="add_supplier")
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect('/')
 @app.route('/view_products')
 def view_products():
 
@@ -151,6 +174,7 @@ def edit_product(id):
     # GET request
     cursor.execute("SELECT * FROM products WHERE id=%s", (id,))
     product = cursor.fetchone()
+    print("EDIT PRODUCT DATA:",product, flush=True)
 
     cursor.execute("SELECT * FROM suppliers")
     suppliers = cursor.fetchall()
@@ -175,13 +199,17 @@ def delete_product(id):
 def update_stock(id):
 
     print("UPDATE_STOCK FUNCTION CALLED")
-    print("I AM INSIDE UPDATE_STOCK")
+
     cursor.execute(
         "SELECT * FROM products WHERE id=%s",
         (id,)
     )
 
     product = cursor.fetchone()
+
+    # Check whether product exists
+    if product is None:
+        return "Product not found", 404
 
     if request.method == 'POST':
 
@@ -204,8 +232,7 @@ def update_stock(id):
             (new_quantity, new_total_price, id)
         )
 
-        print("Saving Stock In History...")
-
+        # Save Stock In History
         try:
             cursor.execute(
                 """
@@ -1048,7 +1075,7 @@ def export_stock_excel():
    
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
 
 

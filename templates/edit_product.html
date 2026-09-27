@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Edit Product</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -21,13 +21,13 @@
        <label>Category <span class="required">*</span></label>
 
 <select id="category" name="category" required>
-    <option value="{{ product[2] }}">{{ product[2] }}</option>
-    <option value="Paper">Paper</option>
-    <option value="Electronics">Electronics</option>
-    <option value="Chemicals">Chemicals</option>
-    <option value="Pipes">Pipes</option>
-    <option value="Containers">Containers</option>
-    <option value="Office Supplies">Office Supplies</option>
+    <option value="">Select Category</option>
+    <option value="Paper" {% if product[2] == 'Paper' %}selected{% endif %}>Paper</option>
+    <option value="Electronics" {% if product[2] == 'Electronics' %}selected{% endif %}>Electronics</option>
+    <option value="Chemicals" {% if product[2] == 'Chemicals' %}selected{% endif %}>Chemicals</option>
+    <option value="Pipes" {% if product[2] == 'Pipes' %}selected{% endif %}>Pipes</option>
+    <option value="Containers" {% if product[2] == 'Containers' %}selected{% endif %}>Containers</option>
+    <option value="Office Supplies" {% if product[2] == 'Office Supplies' %}selected{% endif %}>Office Supplies</option>
 </select>
 
 <br><br>
@@ -35,7 +35,7 @@
         <label>Specification <span class="required">*</span></label>
 
 <select id="specification" name="specification" required>
-    <option value="{{ product[5] }}">{{ product[5] }}</option>
+    <option value=" ">select specification</option>
 </select>
 
 <br><br>
@@ -43,7 +43,7 @@
 <label>Brand <span class="required">*</span></label>
 
 <select id="brand" name="brand" required>
-    <option value="{{ product[9] }}">{{ product[9] }}</option>
+    <option value=" ">select brand</option>
 </select>
 
 <br><br>
@@ -91,21 +91,20 @@
        value="{{ product[7] }}"
        readonly><br><br>
 
-        <label>Supplier <span class="required">*</span></label>
+      <label>Supplier <span class="required">*</span></label>
 
-<select name="supplier" required>
+<select id="supplier" name="supplier" required>
 
-<option value="{{ product[8] }}">{{ product[8] }}</option>
+    <option value="">Select Supplier</option>
 
-{% for supplier in suppliers %}
-<option value="{{ supplier[0] }}">
-    {{ supplier[0] }}
-</option>
-{% endfor %}
+    {% for supplier in suppliers %}
+        <option value="{{ supplier[2] }}">{{ supplier[2] }}</option>
+    {% endfor %}
 
 </select>
 
 <br><br>
+       
 
 
         <button type="submit">
@@ -116,73 +115,110 @@
 
 </div>
 <script>
-const productData = {
+document.addEventListener("DOMContentLoaded", function () {
 
-    "Paper": {
-        specifications: ["White","Blue","Pink","Yellow","Green"],
-        brands: ["JK Copier","JK Easy Copier","Century","Xerox","Navigation","BILT Copier","Chamex"]
-    },
+    const productData = {
+        "Paper": {
+            specifications: ["White", "Blue", "Pink", "Yellow", "Green"],
+            brands: ["JK Copier", "JK Easy Copier", "Century", "Xerox", "Navigation", "BILT Copier", "Chamex"]
+        },
 
-    "Electronics": {
-        specifications: ["Laptop","Keyboard","Mouse","Printer","Scanner"],
-        brands: ["HP","Dell","ASUS","Lenovo","Logitech","Zebronics"]
-    },
+        "Electronics": {
+            specifications: ["Laptop", "Keyboard", "Mouse", "Printer", "Scanner"],
+            brands: ["HP", "Dell", "ASUS", "Lenovo", "Logitech", "Zebronics"]
+        },
 
-    "Chemicals": {
-        specifications: ["Glue","Ink","Bleach","Acid"],
-        brands: ["BASF","SABIC","LG Chem","Atul Ltd"]
-    },
+        "Chemicals": {
+            specifications: ["Glue", "Ink", "Bleach", "Acid"],
+            brands: ["BASF", "SABIC", "LG Chem", "Atul Ltd"]
+        },
 
-    "Pipes": {
-        specifications: ["PVC","GI","CPVC","HDPE"],
-        brands: ["Ashirvad","Finolex","Astral"]
-    },
+        "Pipes": {
+            specifications: ["PVC", "GI", "CPVC", "HDPE"],
+            brands: ["Ashirvad", "Finolex", "Astral"]
+        },
 
-    "Containers": {
-        specifications: ["Plastic Drum","Steel Drum","Carton Box"],
-        brands: ["Time Technoplast","Sintex"]
-    },
+        "Containers": {
+            specifications: ["Plastic Drum", "Steel Drum", "Carton Box"],
+            brands: ["Time Technoplast", "Sintex"]
+        },
 
-    "Office Supplies": {
-        specifications: ["Pen","Notebook","File","Stapler"],
-        brands: ["Reynolds","Classmate","Solo"]
+        "Office Supplies": {
+            specifications: ["Pen", "Notebook", "File", "Stapler"],
+            brands: ["Reynolds", "Classmate", "Solo"]
+        }
+    };
+
+
+    const category = document.getElementById("category");
+    const specification = document.getElementById("specification");
+    const brand = document.getElementById("brand");
+
+    const quantity = document.getElementById("quantity");
+    const price = document.getElementById("price");
+    const totalPrice = document.getElementById("total_price");
+
+
+    function updateOptions() {
+
+        const selectedCategory = category.value;
+
+        specification.innerHTML =
+            '<option value="">Select Specification</option>';
+
+        brand.innerHTML =
+            '<option value="">Select Brand</option>';
+
+
+        if (productData[selectedCategory]) {
+
+            productData[selectedCategory].specifications.forEach(function(item) {
+
+                const option = document.createElement("option");
+
+                option.value = item;
+                option.textContent = item;
+
+                specification.appendChild(option);
+            });
+
+
+            productData[selectedCategory].brands.forEach(function(item) {
+
+                const option = document.createElement("option");
+
+                option.value = item;
+                option.textContent = item;
+
+                brand.appendChild(option);
+            });
+        }
     }
 
-};
 
-document.getElementById("category").addEventListener("change", function(){
+    category.addEventListener("change", updateOptions);
 
-    let category = this.value;
 
-    let specification = document.getElementById("specification");
-    let brand = document.getElementById("brand");
+    // Load Specification and Brand when page opens
+    updateOptions();
 
-    specification.innerHTML =
-    '<option value="">Select Specification</option>';
 
-    brand.innerHTML =
-    '<option value="">Select Brand</option>';
+    // Total Price
+    function calculateTotal() {
 
-    if(productData[category]){
+        const qty = parseFloat(quantity.value) || 0;
+        const priceValue = parseFloat(price.value) || 0;
 
-        productData[category].specifications.forEach(function(item){
-
-            specification.innerHTML +=
-            `<option value="${item}">${item}</option>`;
-
-        });
-
-        productData[category].brands.forEach(function(item){
-
-            brand.innerHTML +=
-            `<option value="${item}">${item}</option>`;
-
-        });
-
+        totalPrice.value = (qty * priceValue).toFixed(2);
     }
+
+
+    quantity.addEventListener("input", calculateTotal);
+    price.addEventListener("input", calculateTotal);
+
+    calculateTotal();
 
 });
 </script>
-
 </body>
 </html>
